@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import "./App.css";
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 
 const App = () => {
 const [todo, setTodo] = useState("");
@@ -11,7 +13,7 @@ const handleSubmit = (e) => {
 
   if (editID) {
     const editTodo = todos.find((i) => i.id === editID);
-    const updatedTodos = todos.map((t) => t.id === editTodo.id ? (t = {id: t.id, todo}) : {id: t.id, todo: t.todo}); // at first we will check the id is matching or not once it gets matched then we will provide it with the id and todo of the currently operating edit if there's a change in edit then it's goint to update it if not then it will keep the same
+    const updatedTodos = todos.map((t) => t.id === editTodo.id ? (t = {id: t.id, todo}) : {id: t.id, todo: t.todo});
     setTodos(updatedTodos);
     setEditID(0);
     setTodo("");
@@ -19,15 +21,14 @@ const handleSubmit = (e) => {
   }
 
   if (todo !== ''){
-    setTodos([{id:`${todo}-${Date.now()}` ,todo}, ...todos]) // ... three dots are spread operator it stores the previous data
+    setTodos([{id:`${todo}-${Date.now()}` ,todo}, ...todos]) 
   }
   setTodo("");
 
 }
 
 const handleDelete = (id) => {
-  const dltTodo = todos.filter((to) => to.id !== id); // its going to search that id if that's present then it's goint to be deleted otherwise its not going to be deleted
-  // now we need to update the state
+  const dltTodo = todos.filter((to) => to.id !== id); 
   setTodos([...dltTodo]);
 }
 
@@ -41,22 +42,8 @@ const handleEdit = (id) => {
     <div className='App'>
       <div className='container'>
         <h1>Todo List App</h1>
-        <form className='todoForm' onSubmit={handleSubmit}>
-          <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)}/> {/*changing the value through on change and getting the value through value*/}
-          <button type='submit'> {editID ? "Edit" : "Go"}</button>
-        </form>
-        <ul className='allTodos'>
-          {
-            todos.map((t) => (
-              <li className='singleTodo'>
-                <span className='Todotext' key={t.id} > {t.todo}</span>
-                <button onClick={() => handleEdit(t.id)}>Edit</button>
-                <button onClick={() => handleDelete(t.id)}>Delete</button>
-              </li>
-            ))
-          }
-          
-        </ul>
+      <TodoForm handleSubmit={handleSubmit} todo={todo} setTodo={setTodo} editID={editID} />
+      <TodoList todos= {todos} handleEdit={handleEdit} handleDelete={handleDelete} />
       </div>
     </div>
   );
